@@ -110,7 +110,6 @@ export default function SpanningTable() {
                     {Object.entries(childOne)?.map(([key, value]) => {
                       return <TableCell>{value}</TableCell>;
                     })}
-                    <TableCell>any</TableCell>
                   </TableRow>
                 );
               })}
@@ -140,8 +139,11 @@ export default function SpanningTable() {
             <TableRow>
               <TableCell>Date</TableCell>
               <TableCell>Action</TableCell>
-              <TableCell>Pricing Type</TableCell>
-              <TableCell></TableCell>
+              <TableRow>
+                <TableCell>Pricing Type</TableCell>
+                <TableCell>Price</TableCell>
+                <TableCell>productPricingStatus</TableCell>
+              </TableRow>
             </TableRow>
           </TableHead>
           {/* {computeBodyTable()} */}
