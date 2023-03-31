@@ -64,7 +64,7 @@ const sample2 = [
 
 export default function SpanningTable() {
   const classes = useStyles();
-  const [oneTable, setOneTable] = useState(false);
+  const [oneTable, setOneTable] = useState(true);
   if (!oneTable) {
     return (
       <Paper className={classes.root}>
@@ -95,15 +95,60 @@ export default function SpanningTable() {
       </Paper>
     );
   } else {
-    return sample2?.map((parentItem) => {
-      let rowSpan = 0;
-      parentItem?.actionType?.map((innerChild) => {
-        rowSpan = rowSpan + innerChild?.pricingDetails?.length;
-        let child = innerChild?.map((childIteration) => {
-          <TableRow rowSpan={innerChild?.pricingDetails?.length}></TableRow>;
+    function computeBodyTable() {
+      let fullTable = sample2?.map((parentData) => {
+        let rowLength = 0;
+        let child = parentData?.actionType?.map((childData) => {
+          let childLength = childData?.pricingDetails?.length;
+          rowLength = rowLength + childLength;
+          return (
+            <TableRow>
+              <TableCell rowSpan={rowLength}>{childData?.name}</TableCell>
+              {childData?.pricingDetails?.map((childOne) => {
+                return (
+                  <TableRow>
+                    {Object.entries(childOne)?.map(([key, value]) => {
+                      return <TableCell>{value}</TableCell>;
+                    })}
+                    <TableCell>any</TableCell>
+                  </TableRow>
+                );
+              })}
+            </TableRow>
+          );
         });
-        return;
+        return (
+          // <TableBody>
+          <>
+            <TableRow>
+              <TableCell rowSpan={rowLength}>{parentData?.name} </TableCell>
+              {/* <TableCell>hello</TableCell> */}
+            </TableRow>
+            {child.map((value) => value)}
+          </>
+          // </TableBody>
+        );
       });
-    });
+      return fullTable;
+    }
+    let element = computeBodyTable();
+    console.log("elemeNT;", element);
+    return (
+      <Paper className={classes.root}>
+        <Table className={classes.table}>
+          <TableHead>
+            <TableRow>
+              <TableCell>Date</TableCell>
+              <TableCell>Action</TableCell>
+              <TableCell>Pricing Type</TableCell>
+              <TableCell></TableCell>
+            </TableRow>
+          </TableHead>
+          {/* {computeBodyTable()} */}
+          <TableRow></TableRow>
+          {element}
+        </Table>
+      </Paper>
+    );
   }
 }
