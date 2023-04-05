@@ -62,6 +62,31 @@ const sample2 = [
   }
 ];
 
+const colDef = [
+  {
+    key: "entity_date_stamp",
+    label: "Entity Date"
+  },
+  {
+    key: "action",
+    label: "Action",
+    children: [
+      {
+        key: "PricingType",
+        label: "PricingType"
+      },
+      {
+        key: "Price",
+        label: "price"
+      },
+      {
+        key: "productPricingStatus",
+        label: "productPricingStatus"
+      }
+    ]
+  }
+];
+
 export default function SpanningTable() {
   const classes = useStyles();
   const [oneTable, setOneTable] = useState(true);
@@ -130,13 +155,30 @@ export default function SpanningTable() {
       });
       return fullTable;
     }
+
+    const computeHeaderTable = (mainData) => {
+      let header = mainData?.map((parentData) => {
+        return (
+          <>
+            <TableCell>{parentData?.label}</TableCell>
+            {parentData?.children && (
+              <TableRow>{computeHeaderTable(parentData?.children)}</TableRow>
+            )}
+          </>
+        );
+      });
+      return header?.map((value) => value);
+    };
     let element = computeBodyTable();
+    let header = computeHeaderTable(colDef);
+    console.log("headER:", header);
+
     console.log("elemeNT;", element);
     return (
       <Paper className={classes.root}>
         <Table className={classes.table}>
           <TableHead>
-            <TableRow>
+            {/* <TableRow>
               <TableCell>Date</TableCell>
               <TableCell>Action</TableCell>
               <TableRow>
@@ -144,11 +186,12 @@ export default function SpanningTable() {
                 <TableCell>Price</TableCell>
                 <TableCell>productPricingStatus</TableCell>
               </TableRow>
-            </TableRow>
+            </TableRow> */}
+            <TableRow>{header}</TableRow>
           </TableHead>
-          {/* {computeBodyTable()} */}
+          {computeBodyTable()}
           <TableRow></TableRow>
-          {element}
+          {/* {element} */}
         </Table>
       </Paper>
     );
